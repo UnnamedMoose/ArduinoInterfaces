@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# define a variable describing where to install to
+ARDUINO_LIB_DIR=/usr/share/arduino/libraries
+
+# path to the src
+SRC_DIR=./src
+
+# list of all the modules that need to sit in independent folders for Arduino
+# compiler to be able to find them
+declare -a modules=("Module" "passerModule" "LEDModule" "loadCell" "stepperMotor" "rotaryEncoder")
+
+# install each module
+for mod in "${modules[@]}"
+do
+   # create a directory if it doesn't exist yet
+   sudo mkdir $ARDUINO_LIB_DIR/$mod 2>/dev/null
+   
+   # copy the source code
+   sudo cp $SRC_DIR/$mod.cpp $SRC_DIR/$mod.h $ARDUINO_LIB_DIR/$mod 2>/dev/null
+done
