@@ -15,11 +15,13 @@ CHANGELOG
 #define COMMUNICATION_INTERFACE_H
 
 #include "Arduino.h" // Basic Arduino stuff.
-
 #include "Module.h"
 
 // Buffer size for parsing inputs.
 #define DATABUFFERSIZE 180
+
+// Debug output flag
+// #define DEBUG_PRINTOUT
 
 class CommunicationInterface
 {
@@ -57,8 +59,15 @@ public:
     // @param modulePtrs - list of pointers to objects of type or derived from Module
     void setup(Module* modulePtrs[]);
 
+    // Main funciton which calles getSerial() and parseInput() sequentially to
+    // update the state of all of the connected modules.
+    void loop(void);
+
     // Read input from the serial port and store it in the inputDataBuffer buffer.
     boolean getSerial(void);
+
+    // Extract commands and corresponding numbers from the inputDataBuffer input buffer.
+    void parseInput(void);
 };
 
 #endif

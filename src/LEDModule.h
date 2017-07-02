@@ -8,7 +8,7 @@
  * @url: www.aleksanderlidtke.com
  * @since: 10 Jul 2016
  * @version: 1.0.0
- * 
+ *
  * CHANGELOG
  * 10 Jul 2016 - 1.0.0 - Alek Lidtke - released the first version.
  */
@@ -21,12 +21,12 @@
 class LEDModule : public Module
 {
 	private:
-		int outputPin;
+		int outputPin_;
 	public:
-		LEDModule(const char* sensorID, int sensorOutputPin);
+		LEDModule(const char* sensorID, int outputPin);
 		LEDModule(void);
 		~LEDModule(void);
-		
+
 		void setValue(int value); // override and set pin output
 		void blink(int blinkDelay, int noBlinks); // blink a couple of times with a given interval
 };

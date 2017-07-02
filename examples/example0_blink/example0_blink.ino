@@ -36,10 +36,14 @@ void setup()
 
 void loop()
 {
-    comms.getSerial();
-    
-    LED.setValue(HIGH);
-    delay(1000);
-    LED.setValue(LOW);
-    delay(1000);
+    // Read in serial inputs and pass them to connected modules, setting their values.
+    comms.loop();
+
+    // If the user has asked the LED to be switched on or off using
+    // >builtInLED,1;  or   >builtInLED,0;
+    // The comms.loop() method will be take care of lighting up the LED when
+    // the LED object's setValue method gets called in CommunicationInterface::parseInput().
+    // So all the main program has to do is wait for the next pass.
+
+    delay(100);
 }
