@@ -1,6 +1,6 @@
-#include "rotaryEncoder.h"
+#include "rotaryEncoderModule.h"
 
-rotaryEncoder::rotaryEncoder(const char* sensorID, int pinA, int pinB, int pinI, int noSteps)
+rotaryEncoderModule::rotaryEncoderModule(const char* sensorID, int pinA, int pinB, int pinI, int noSteps)
 :
 	Module(sensorID),
 	pinChannelA_(pinA),
@@ -15,16 +15,16 @@ rotaryEncoder::rotaryEncoder(const char* sensorID, int pinA, int pinB, int pinI,
 	pinMode (pinChannelI_,INPUT);
 };
 
-rotaryEncoder::rotaryEncoder(void) : noSteps_(1) // initialise the const member
+rotaryEncoderModule::rotaryEncoderModule(void) : noSteps_(1) // initialise the const member
 {
 	pinMode (pinChannelA_,INPUT);
 	pinMode (pinChannelB_,INPUT);
 	pinMode (pinChannelI_,INPUT);
 };
 
-rotaryEncoder::~rotaryEncoder(void) {};
+rotaryEncoderModule::~rotaryEncoderModule(void) {};
 
-void rotaryEncoder::loop()
+void rotaryEncoderModule::loop()
 {
 	/* This method should get called on each pass of the loop() in the main Arduino
 	code. It read the current state of the encoder channels, compares it the the old

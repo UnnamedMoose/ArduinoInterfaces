@@ -8,8 +8,8 @@ SRC_DIR=./src
 
 # list of all the modules that need to sit in independent folders for Arduino
 # compiler to be able to find them
-declare -a modules=("Module" "passerModule" "LEDModule" "loadCell" "stepperMotor"
-    "rotaryEncoder" "CommunicationInterface")
+declare -a modules=("Module" "passerModule" "LEDModule" "loadCellModule" "stepperMotorModule"
+    "rotaryEncoderModule" "CommunicationInterface")
 
 # install each module
 for mod in "${modules[@]}"

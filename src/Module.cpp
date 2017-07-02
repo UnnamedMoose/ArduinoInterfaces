@@ -47,6 +47,13 @@ int Module::getValue(void)
 	return currentValue_;
 }
 
+// Send current sensor value as a dobule precision float.
+double Module::getReading(void)
+{
+	return double(getValue());
+}
+
+
 int Module::arm(void)
 /* Method encompassing setup of the module, i.e. the block of code called
  * during setup() in the main routine

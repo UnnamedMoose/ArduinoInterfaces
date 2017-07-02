@@ -1,6 +1,6 @@
-#include "stepperMotor.h"
+#include "stepperMotorModule.h"
 
-stepperMotor::stepperMotor(const char* sensorID, int stepsPerRevolution, int motorSpeed,
+stepperMotorModule::stepperMotorModule(const char* sensorID, int stepsPerRevolution, int motorSpeed,
 		int pin0, int pin1, int pin2, int pin3)
 :
 	Module(sensorID),
@@ -8,29 +8,29 @@ stepperMotor::stepperMotor(const char* sensorID, int stepsPerRevolution, int mot
 	stepCount_(0),
 	motorSpeed_(motorSpeed),
 	stepper_(stepsPerRevolution,pin0,pin1,pin2,pin3),
-	speedModule_(this, "SetSpeed", &stepperMotor::setSpeed)
+	speedModule_(this, "SetSpeed", &stepperMotorModule::setSpeed)
 {
 	setSpeed(motorSpeed);
 };
 
-stepperMotor::stepperMotor(void)
+stepperMotorModule::stepperMotorModule(void)
 :
 	// Need a dummy default constructor for the Stepper module instance since, of course,
 	// it's not provided in the Arduino base; use the LED pin and hope it'll be OK
 	stepper_(10,13,13,13,13)
 {};
 
-stepperMotor::~stepperMotor(void) {};
+stepperMotorModule::~stepperMotorModule(void) {};
 
 // take as many steps as required
-void stepperMotor::setValue(int newValue)
+void stepperMotorModule::setValue(int newValue)
 {
 	for (int i = 0; i < abs(newValue); i++)
 		step(newValue);
 }
 
 // take a single step; sign of the argument denotes direction
-void stepperMotor::step(int dir)
+void stepperMotorModule::step(int dir)
 {
 	if (dir >= 0)
 	{
@@ -45,7 +45,7 @@ void stepperMotor::step(int dir)
 }
 
 // set the speed
-void stepperMotor::setSpeed(int newSpeed)
+void stepperMotorModule::setSpeed(int newSpeed)
 {
 	/*Serial.print(getIdentifier());
 	Serial.print(": Setting new speed to ");

@@ -1,7 +1,7 @@
 /* A class that serves to interact with stepper motors using Darlington transistor arrays
  *
  * This header and the source have to be placed in the Arduino libraries' directory,
- * e.g. /usr/share/arduino/libraries/ in stepperMotor folder.
+ * e.g. /usr/share/arduino/libraries/ in stepperMotorModule folder.
  *
  * @author: Artur Lidtke
  * @version: 1.0.0
@@ -10,8 +10,8 @@
  * 18 Nov 2016 - 1.0.0 - released the first version.
  */
 
-#ifndef stepperMotor_H
-#define stepperMotor_H
+#ifndef stepperMotorModule_H
+#define stepperMotorModule_H
 
 #include "Arduino.h" // Basic Arduino stuff.
 #include <Stepper.h> // stepper motor library from Arduino
@@ -19,7 +19,7 @@
 #include "Module.h" // The base class of all the actuators and sensors.
 #include "passerModule.h" // used to control individual pieces of funcitonality of this class
 
-class stepperMotor : public Module
+class stepperMotorModule : public Module
 {
 	private:
 		// how many steps per revolution
@@ -35,12 +35,12 @@ class stepperMotor : public Module
 		Stepper stepper_;
 
 		// private modules for controlling the motor speed
-		passerModule<stepperMotor,int> speedModule_;
+		passerModule<stepperMotorModule,int> speedModule_;
 
 	public:
-		stepperMotor(const char* sensorID, int stepsPerRevolution, int motorSpeed, int pin0, int pin1, int pin2, int pin3);
-		stepperMotor(void);
-		~stepperMotor(void);
+		stepperMotorModule(const char* sensorID, int stepsPerRevolution, int motorSpeed, int pin0, int pin1, int pin2, int pin3);
+		stepperMotorModule(void);
+		~stepperMotorModule(void);
 
 		// Override parent method to set inputs - orders the motor to take a given number of steps
 		// sign of the value denotes direction

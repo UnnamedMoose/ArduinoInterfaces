@@ -5,7 +5,8 @@ CommunicationInterface::CommunicationInterface(void)
 :
     outputDataBuffer_(""),
     placeInBuffer_(false),
-	dataBufferIndex_(0)
+	dataBufferIndex_(0),
+    nModules_(0)
 {
     // Do nothing.
 }
@@ -13,25 +14,26 @@ CommunicationInterface::CommunicationInterface(void)
 // Destructor - make sure to clean up those pointers!
 CommunicationInterface::~CommunicationInterface(void)
 {
-    for(long int moduleI=0; moduleI<sizeof(modules_)/sizeof(modules_[0]); moduleI++)
+    for(long int moduleI=0; moduleI<nModules_; moduleI++)
         delete modules_[moduleI];
 }
 
 // Initialises the communications and stores pointers to all linked modules
 // inside the current instance.
-// @param modulePtrs - list of pointers to objects of type or derived from Module
-void CommunicationInterface::setup(Module* modulePtrs[])
+void CommunicationInterface::setup(Module* modulePtrs[], size_t nPtrs)
 {
     // Copy the pointers to the class container. Necessary to do it this way
     // to make sure they are kept even if the original array passed to this function
     // gets out of scope.
-    modules_ = (Module**) malloc(sizeof(modulePtrs));
-    for(long int moduleI=0; moduleI<sizeof(modules_)/sizeof(modules_[0]); moduleI++)
+    nModules_ = nPtrs;
+    modules_ = (Module**) malloc(nModules_ * sizeof(Module*));
+
+    for(long int moduleI=0; moduleI<nModules_; moduleI++)
         modules_[moduleI] = modulePtrs[moduleI];
 
     #ifdef DEBUG_PRINTOUT
     Serial.println("Initialised communications with modules:");
-    for(long int moduleI=0; moduleI<sizeof(modules_)/sizeof(modules_[0]); moduleI++)
+    for(long int moduleI=0; moduleI<nModules_; moduleI++)
     {
         Serial.print("    ");
         Serial.print(moduleI);
@@ -102,11 +104,6 @@ boolean CommunicationInterface::getSerial(void)
 		}
 	}
 
-    #ifdef DEBUG_PRINTOUT
-    Serial.print("Current buffer: ");
-    Serial.println(inputDataBuffer_);
-    #endif
-
 	return false; // Something went wrong or we didn't receive an actual command.
 }
 
@@ -121,8 +118,9 @@ void CommunicationInterface::parseInput(void)
 	// Parse the entire inputDataBuffer of tokens (commands and their value arguments).
 	int nextModuleIndex = -1; // Index of the actuator value for which is sent in this part of the telecommand.
 
-	while (token != NULL)
+    while (token != NULL)
 	{
+
 		// If next actuator index < 0 we have no value to read now
 		if (nextModuleIndex >= 0)
 		{
@@ -140,7 +138,7 @@ void CommunicationInterface::parseInput(void)
 		else
 		{
 			// the current token may be a string corresponding to one of the modules
-			for(long int moduleI=0; moduleI<sizeof(modules_)/sizeof(modules_[0]); moduleI++)
+			for(long int moduleI=0; moduleI<nModules_; moduleI++)
 			{
 				if (strcmp(token, modules_[moduleI]->getIdentifier()) == 0)
 				{

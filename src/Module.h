@@ -18,6 +18,10 @@
 	this method and return something meaningful.
  * 12 Aug 2016 - 1.0.2 - Artur Lidtke - added an option to set the identifiers
  	and set the destructor to virtual to allow derived classes to implement it as they please
+ * 2 Jul 2017 - 1.0.3 - Artur Lidtke - added the getReading() method which allows
+ 	inhertiting classes to return floating point values. The idea is to then implement
+	a method similar to CommunicationInterface::parseInputs() that will send readings
+	for all connected sensors irresepctively of their type.
  */
 #ifndef MODULE_H
 #define MODULE_H
@@ -39,8 +43,16 @@ class Module
 		// Sets control value of the module, e.g. thrust.
 		virtual void setValue(int newValue);
 
-		// Returns the current control value, e.g. sensor reading.
+		// Returns the current control value, e.g. sensor reading as an integer.
 		virtual int getValue(void);
+
+		// Same as getValue but returns a floating point number. This is needed for
+		// sending outputs for which precision is important without converting to
+		// integers on the Arduino side and then back to floats at the listening
+		// device. Default behaviour is to simply cast double(getValue()), which allows
+		// modules implementing integer functionality to just implement a single
+		// virtual method.
+		virtual double getReading(void);
 
 		// Method encompassing setup of the module, i.e. the block of code called
 		// during setup() in the main routine; returns the delay required for the
