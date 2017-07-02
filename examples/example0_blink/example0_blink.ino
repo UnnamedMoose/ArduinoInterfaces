@@ -29,7 +29,7 @@ void setup()
     Module* modules[] = { &LED };
 
     // Initialise the communication protocol.
-    comms.setup(modules);
+    comms.setup(modules, sizeof(modules)/sizeof(modules[0]));
 
     Serial.println("Finished set up");
 }
