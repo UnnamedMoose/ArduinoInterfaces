@@ -20,7 +20,7 @@ CHANGELOG
 LEDModule LED("builtInLED", 13);
 
 // Define a load cell amplifier sensor.
-loadCellModule loadCell("loadCell", A0, 2, 128);
+loadCellModule loadCell("loadCell", A0, A1, 128);
 
 // Create the communication handling interface
 CommunicationInterface comms;
