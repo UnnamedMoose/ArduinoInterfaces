@@ -17,16 +17,6 @@ import serial
 # used for timing the reading form the buffer
 import time
 
-# # Add the Python library to PYTHONPATH.
-# # NOTE: a much better way to do this is to set your PYTHONPATH environment variable
-# # to include the locaiton of the library. This example does it the hard way to
-# # make sure the code will work right after downloading.
-# import sys
-# sys.path.append("../../pythonSrc")
-
-# # load the custom Python module
-# import serialCommunicationProtocol as comms
-
 #==========
 
 # top-level control of the script
