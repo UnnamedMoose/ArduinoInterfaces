@@ -110,8 +110,8 @@ boolean CommunicationInterface::getSerial(void)
 // Extract commands and corresponding numbers from the inputDataBuffer input buffer.
 void CommunicationInterface::parseInput(void)
 {
-    Serial.print("Buffer=");
-    Serial.println(inputDataBuffer_);
+    // Serial.print("Buffer=");
+    // Serial.println(inputDataBuffer_);
 
     // Holds the tokens used to match passed values to each listening module.
 	char * token;
@@ -123,8 +123,8 @@ void CommunicationInterface::parseInput(void)
 
     while (token != NULL)
 	{
-        Serial.print("Token=");
-        Serial.println(token);
+        // Serial.print("Token=");
+        // Serial.println(token);
 
 		// If next module index < 0 we have no value to read now
 		if (nextModuleIndex >= 0)
