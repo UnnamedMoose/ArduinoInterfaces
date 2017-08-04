@@ -110,18 +110,23 @@ boolean CommunicationInterface::getSerial(void)
 // Extract commands and corresponding numbers from the inputDataBuffer input buffer.
 void CommunicationInterface::parseInput(void)
 {
+    Serial.print("Buffer=");
+    Serial.println(inputDataBuffer_);
+
     // Holds the tokens used to match passed values to each listening module.
 	char * token;
     // Get the first token. DATA_DELIMITER is a char but need to convert to const char*
 	token = strtok(inputDataBuffer_, String(DATA_DELIMITER).c_str());
 
 	// Parse the entire inputDataBuffer of tokens (commands and their value arguments).
-	int nextModuleIndex = -1; // Index of the actuator value for which is sent in this part of the telecommand.
+	int nextModuleIndex = -1; // Index of the module value for which is sent in this part of the telecommand.
 
     while (token != NULL)
 	{
+        Serial.print("Token=");
+        Serial.println(token);
 
-		// If next actuator index < 0 we have no value to read now
+		// If next module index < 0 we have no value to read now
 		if (nextModuleIndex >= 0)
 		{
 			#ifdef DEBUG_PRINTOUT
@@ -149,6 +154,11 @@ void CommunicationInterface::parseInput(void)
 		}
 
 		// Continue to the new token.
+        // If given a NULL pointer, the funciton continues from the point where
+        // the previous call finished, thereby moving along the buffer string.
 		token = strtok(NULL, String(DATA_DELIMITER).c_str());
 	}
+
+    // Reset the buffer as the first token is still in it
+    memset(&inputDataBuffer_[0], 0, sizeof(inputDataBuffer_));
 }

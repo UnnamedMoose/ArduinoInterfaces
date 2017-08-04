@@ -52,7 +52,9 @@ class loadCellModule : public Module
 		// getReading is the main data acquisition function and returns a double.
 		double getReading(void);
 
-		// set the value to zero
+		// set the value to zero; the function ignores the value passed to the
+		// associated passer module, it treats the call to the passer object as
+		// a boolean flag.
 		void tare(void);
 
 		// set the scaling constant
