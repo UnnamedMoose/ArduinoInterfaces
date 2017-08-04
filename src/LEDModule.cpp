@@ -24,6 +24,10 @@ void LEDModule::setValue(int value)
  * turned on, if 0 they're turned off.
  */
 {
+	// Store the value to allow other processess to check the status of the LED
+	currentValue_ = value;
+
+	// set the pin value
 	if(value==1)
 	{
 		digitalWrite(outputPin_, HIGH);
