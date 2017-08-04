@@ -3,7 +3,7 @@
 /*
 - use the read() method to get an int withot bothering with the conversion stuff
 - change getValue() to return an int that's been scaled and zeroed
-
+- add an interface to get end, delimiter and start chars from the comms module
 */
 
 loadCellModule::loadCellModule(const char* sensorID, int dOutPin, int pdSckPin, int gain)
@@ -13,6 +13,8 @@ loadCellModule::loadCellModule(const char* sensorID, int dOutPin, int pdSckPin, 
 	pdSckPin_(pdSckPin),
 	gain_(gain),
 	transducer_(dOutPin_, pdSckPin_, gain_),
+	offset_(0),
+	constant_(1.),
 	calibrationModule_(this, "Calibrate", &loadCellModule::calibrate), // individual calibration module
 	tareModule_(this, "Tare", &loadCellModule::tare)
 {};
@@ -26,10 +28,12 @@ loadCellModule::loadCellModule(void)
 
 loadCellModule::~loadCellModule(void) {};
 
-// read the value of the transducer and round to the nearest int
+// read the value of the transducer as an integer
+// NOTE: it is recommended that the constant_ is set to 1 to achieve maximum accuracy
+// when sending the data over serial
 int loadCellModule::getValue(void)
 {
-	return (int) floor(transducer_.get_units()+0.5);
+	return int( (transducer_.read() - offset_)/constant_ );
 }
 
 // return the reading without casting to an int
@@ -48,6 +52,7 @@ void loadCellModule::tare(void)
 	#endif
 
 	transducer_.tare();
+	offset_ = transducer_.get_offset();
 }
 
 // set the calibration constant
@@ -60,6 +65,7 @@ void loadCellModule::calibrate(double newConstant)
 	#endif
 
 	transducer_.set_scale(newConstant);
+	constant_ = newConstant;
 }
 
 void loadCellModule::powerDown(void)

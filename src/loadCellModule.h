@@ -37,6 +37,11 @@ class loadCellModule : public Module
 		// transducer object from HX711 library
 		HX711 transducer_;
 
+		// keep the offset and calibration constants in this object for easy
+		// access without calling the get() methods on the transducer_
+		int offset_;
+		double constant_;
+
 		// private module for setting the calibration constant individually
 		passerModule<loadCellModule,double> calibrationModule_;
 		passerModule<loadCellModule,void> tareModule_;
