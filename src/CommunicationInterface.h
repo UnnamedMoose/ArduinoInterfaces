@@ -84,6 +84,17 @@ public:
 
     // Send a single value with a label over the serial port.
     template <typename T> void printValue(const char* label, T value);
+
+    // Send data from a buffer array assumming each row of the array should
+    // go to a separate line in the serial output.
+    // - to pass a 2D array with unknown number of columns need to use a trick
+    //   and pass it through a void pointer which then gets cast to an appropriate
+    //   type using the number of columns and rows. NOTE: on some compilers it
+    //   should be possible to use "T values[][nRows]" instead, which is easier to read.
+    // - msgBuffer is an externally declared char array that is meant to hold the
+    //   concatenated string. It is the user's responsibility to ensure this has sufficient size.
+    template <typename T> void printArray(const int nRows, const int nCols,
+        const char* labels[], void *vals, char msgBuffer[]);
 };
 
 // TEMPLATE FUNCTION DEFINITIONS
@@ -98,5 +109,48 @@ template <typename T> void CommunicationInterface::printValue(const char* label,
     Serial.println(END_CHAR);
 }
 
+// Send data from a buffer array assumming each row of the array should
+// go to a separate line in the serial output.
+template <typename T> void CommunicationInterface::printArray(const int nRows, const int nCols,
+    const char* labels[], void *vals, char msgBuffer[])
+{
+    // cast the void pointer to an array type
+    T (*values)[nCols] = static_cast<T (*)[nCols]>(vals);
+
+    // temporary buffer for converting numbers to strings
+    char num[10];
+
+    for (size_t i = 0; i < nRows; i++)
+    {
+        // start a new line of the message
+        strcat(msgBuffer, String(OUTPUT_START_CHAR).c_str());
+
+        // add each reading
+        for (size_t j = 0; j < nCols; j++)
+        {
+            strcat(msgBuffer, labels[j]);
+            strcat(msgBuffer, String(DATA_DELIMITER).c_str());
+
+            // NOTE: sprintf on a standard Arduino only works with integers,
+            // if want to do this with a float, need to use dtostrf
+            // memset(&num[0], 0, sizeof(num));
+            // dtostrf(dataBuffer[i][j], dataNumberLength, 0, num);
+            // num[dataNumberLength] = '\0';
+            sprintf(num, "%d", values[i][j]);
+            strcat(msgBuffer, num);
+
+            // add a delimiter or an EOL
+            (j<(nCols-1)) ? strcat(msgBuffer, ",") : strcat(msgBuffer, String(END_CHAR).c_str());
+        }
+        strcat(msgBuffer, "\n");
+    }
+    // terminate the message and send to the serial port
+    strcat(msgBuffer, "\0");
+    Serial.print(msgBuffer);
+
+    // set the first element of the buffer as termination character to make sure
+    // it may be re-used for something else
+    msgBuffer[0] = '\0';
+}
 
 #endif
