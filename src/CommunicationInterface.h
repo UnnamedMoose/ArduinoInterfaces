@@ -17,11 +17,11 @@ CHANGELOG
 #include "Arduino.h" // Basic Arduino stuff.
 #include "Module.h"
 
+// NOTE Debug output flag
+// #define DEBUG_PRINTOUT
+
 // Buffer size for parsing inputs.
 #define DATABUFFERSIZE 180
-
-// Debug output flag
-#define DEBUG_PRINTOUT
 
 class CommunicationInterface
 {

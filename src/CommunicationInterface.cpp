@@ -31,7 +31,7 @@ void CommunicationInterface::setup(Module* modulePtrs[], size_t nPtrs)
     for(long int moduleI=0; moduleI<nModules_; moduleI++)
         modules_[moduleI] = modulePtrs[moduleI];
 
-    #ifdef DEBUG_PRINTOUT
+    // #ifdef DEBUG_PRINTOUT
     Serial.println("Initialised communications with modules:");
     for(long int moduleI=0; moduleI<nModules_; moduleI++)
     {
@@ -40,15 +40,17 @@ void CommunicationInterface::setup(Module* modulePtrs[], size_t nPtrs)
         Serial.print(": ");
         Serial.println(modules_[moduleI]->getIdentifier());
     }
-    #endif
+    // #endif
 }
 
 // Main funciton which calles getSerial() and parseInput() sequentially to
 // update the state of all of the connected modules.
 void CommunicationInterface::loop(void)
 {
-    getSerial();
-    parseInput();
+    // Only attempt to parse the incoming data if a full command with appropriate
+    // start and end delimiters has been accommodated in the buffer.
+    if (getSerial())
+        parseInput();
 }
 
 boolean CommunicationInterface::getSerial(void)
@@ -110,11 +112,9 @@ boolean CommunicationInterface::getSerial(void)
 // Extract commands and corresponding numbers from the inputDataBuffer input buffer.
 void CommunicationInterface::parseInput(void)
 {
-    // Serial.print("Buffer=");
-    // Serial.println(inputDataBuffer_);
-
     // Holds the tokens used to match passed values to each listening module.
 	char * token;
+
     // Get the first token. DATA_DELIMITER is a char but need to convert to const char*
 	token = strtok(inputDataBuffer_, String(DATA_DELIMITER).c_str());
 
@@ -123,9 +123,6 @@ void CommunicationInterface::parseInput(void)
 
     while (token != NULL)
 	{
-        // Serial.print("Token=");
-        // Serial.println(token);
-
 		// If next module index < 0 we have no value to read now
 		if (nextModuleIndex >= 0)
 		{
