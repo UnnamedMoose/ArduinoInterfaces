@@ -1,5 +1,11 @@
 #include "loadCellModule.h"
 
+/*
+- use the read() method to get an int withot bothering with the conversion stuff
+- change getValue() to return an int that's been scaled and zeroed
+
+*/
+
 loadCellModule::loadCellModule(const char* sensorID, int dOutPin, int pdSckPin, int gain)
 :
 	Module(sensorID),

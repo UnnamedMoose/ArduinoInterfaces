@@ -67,8 +67,9 @@ class loadCellModule : public Module
 		void powerUp(void);
 
 		// access methods allowing the object to be interrogated
-		inline double getConstant() const { return transducer_.get_scale(); }
-		inline double getZero() const { return transducer_.get_offset(); }
+		// NOTE these should be const functions but the HX711 lib doesn't allow that...
+		inline double getConstant() { return transducer_.get_scale(); }
+		inline double getZero() { return transducer_.get_offset(); }
 
 		// return pointers to passer functions
 		Module* calibrationModulePtr() { return &calibrationModule_; };
