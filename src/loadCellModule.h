@@ -19,8 +19,8 @@
 #include "HX711.h" // class used to interact with the sensors
 #include "passerModule.h" // used to control individual pieces of funcitonality of this class
 
-// Flag to enable debug printing into serial.
-#define DEBUG_PRINTOUT
+// NOTE Flag to enable debug printing into serial.
+// #define DEBUG_PRINTOUT
 
 class loadCellModule : public Module
 {
@@ -65,6 +65,10 @@ class loadCellModule : public Module
 
 		// power back up
 		void powerUp(void);
+
+		// access methods allowing the object to be interrogated
+		inline double getConstant() const { return transducer_.get_scale(); }
+		inline double getZero() const { return transducer_.get_offset(); }
 
 		// return pointers to passer functions
 		Module* calibrationModulePtr() { return &calibrationModule_; };
