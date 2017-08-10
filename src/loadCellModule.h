@@ -51,8 +51,11 @@ class loadCellModule : public Module
 		loadCellModule(void);
 		~loadCellModule(void);
 
-		// Override parent method to get outputs. getValue rounds to the nearest int
-		int getValue(void);
+		// NOTE: getValue() not implemented as leads to loss of precision is calibration
+		// constant is small due to a long int being cast to an int. Since there's
+		// no fail-safe way of doing that conversion without lack of precision
+		// the getReading() method should be used instead.
+		// int getValue(void);
 
 		// getReading is the main data acquisition function and returns a double.
 		double getReading(void);

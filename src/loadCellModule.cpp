@@ -23,12 +23,10 @@ loadCellModule::loadCellModule(void)
 loadCellModule::~loadCellModule(void) {};
 
 // read the value of the transducer as an integer
-// NOTE: it is recommended that the constant_ is set to 1 to achieve maximum accuracy
-// when sending the data over serial
-int loadCellModule::getValue(void)
-{
-	return int( (transducer_.read() - offset_)/constant_ );
-}
+// int loadCellModule::getValue(void)
+// {
+// 	return int( (transducer_.read() - offset_)/constant_ );
+// }
 
 // return the reading without casting to an int
 double loadCellModule::getReading(void)
