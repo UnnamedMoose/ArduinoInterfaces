@@ -94,7 +94,7 @@ public:
     // - msgBuffer is an externally declared char array that is meant to hold the
     //   concatenated string. It is the user's responsibility to ensure this has sufficient size.
     template <typename T> void printArray(const int nRows, const int nCols,
-        const char* labels[], void *vals, char msgBuffer[]);
+        const char* labels[], void *vals, char msgBuffer[], int floatPrecision = 2);
 };
 
 // TEMPLATE FUNCTION DEFINITIONS
@@ -112,7 +112,7 @@ template <typename T> void CommunicationInterface::printValue(const char* label,
 // Send data from a buffer array assumming each row of the array should
 // go to a separate line in the serial output.
 template <typename T> void CommunicationInterface::printArray(const int nRows, const int nCols,
-    const char* labels[], void *vals, char msgBuffer[])
+    const char* labels[], void *vals, char msgBuffer[], int floatPrecision)
 {
     // cast the void pointer to an array type
     T (*values)[nCols] = static_cast<T (*)[nCols]>(vals);
@@ -133,10 +133,9 @@ template <typename T> void CommunicationInterface::printArray(const int nRows, c
 
             // NOTE: sprintf on a standard Arduino only works with integers,
             // if want to do this with a float, need to use dtostrf
-            // memset(&num[0], 0, sizeof(num));
-            // dtostrf(dataBuffer[i][j], dataNumberLength, 0, num);
-            // num[dataNumberLength] = '\0';
-            sprintf(num, "%d", values[i][j]);
+            // use minimum width of 0 characters and a desired floating point precision
+            dtostrf(values[i][j], 0, floatPrecision, num);
+            // sprintf(num, "%d", values[i][j]); // this may be used for integers only
             strcat(msgBuffer, num);
 
             // add a delimiter or an EOL
