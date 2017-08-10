@@ -31,7 +31,9 @@ loadCellModule::~loadCellModule(void) {};
 // return the reading without casting to an int
 double loadCellModule::getReading(void)
 {
-	return transducer_.get_units();
+	// use the get_value method as that returns a double, not a float like
+	// get_units does. That means scaling needs to be done here.
+	return transducer_.get_value()/constant_;
 }
 
 // set sensor reading to zero
