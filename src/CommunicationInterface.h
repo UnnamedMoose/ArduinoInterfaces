@@ -85,6 +85,11 @@ public:
     // Send a single value with a label over the serial port.
     template <typename T> void printValue(const char* label, T value);
 
+    // Send a list of value with labels printed to an arbitrary precision (default 2).
+    // needs an external char buffer for composing the message
+    template <typename T> void printValues(const char* labels[], T values[],
+        const unsigned int nValues, char msgBuffer[], const unsigned int floatPrecision = 2);
+
     // Send data from a buffer array assumming each row of the array should
     // go to a separate line in the serial output.
     // - to pass a 2D array with unknown number of columns need to use a trick
@@ -93,8 +98,8 @@ public:
     //   should be possible to use "T values[][nRows]" instead, which is easier to read.
     // - msgBuffer is an externally declared char array that is meant to hold the
     //   concatenated string. It is the user's responsibility to ensure this has sufficient size.
-    template <typename T> void printArray(const int nRows, const int nCols,
-        const char* labels[], void *vals, char msgBuffer[], int floatPrecision = 2);
+    template <typename T> void printArray(const unsigned int nRows, const unsigned int nCols,
+        const char* labels[], void *vals, char msgBuffer[], const unsigned int floatPrecision = 2);
 };
 
 // TEMPLATE FUNCTION DEFINITIONS
@@ -109,10 +114,35 @@ template <typename T> void CommunicationInterface::printValue(const char* label,
     Serial.println(END_CHAR);
 }
 
+// Send a list of value with labels.
+template <typename T> void CommunicationInterface::printValues(const char* labels[], T values[],
+    const unsigned int nValues, char msgBuffer[], const unsigned int floatPrecision)
+{
+    char num[10];
+
+    strcat(msgBuffer, String(OUTPUT_START_CHAR).c_str());
+
+    // add each value
+    for (unsigned int j = 0; j < nValues; j++)
+    {
+        strcat(msgBuffer, labels[j]);
+        strcat(msgBuffer, String(DATA_DELIMITER).c_str());
+        dtostrf(values[j], 0, floatPrecision, num);
+        strcat(msgBuffer, num);
+
+        // add a delimiter or an EOL
+        (j<(nValues-1)) ? strcat(msgBuffer, ",") : strcat(msgBuffer, String(END_CHAR).c_str());
+    }
+
+    Serial.println(msgBuffer);
+    msgBuffer[0] = '\0';
+}
+
 // Send data from a buffer array assumming each row of the array should
 // go to a separate line in the serial output.
-template <typename T> void CommunicationInterface::printArray(const int nRows, const int nCols,
-    const char* labels[], void *vals, char msgBuffer[], int floatPrecision)
+template <typename T> void CommunicationInterface::printArray(
+    const unsigned int nRows, const unsigned int nCols,
+    const char* labels[], void *vals, char msgBuffer[], const unsigned int floatPrecision)
 {
     // cast the void pointer to an array type
     T (*values)[nCols] = static_cast<T (*)[nCols]>(vals);
